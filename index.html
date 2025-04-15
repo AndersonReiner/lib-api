@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Teste de CORS com Administrador</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      padding: 40px;
+      text-align: center;
+    }
+    h1 {
+      color: #333;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #resposta {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>Teste de CORS - Buscar Administradores</h1>
+  <button onclick="buscarAdministradores()">Buscar</button>
+  <div id="resposta"></div>
+
+  <script>
+    function buscarAdministradores() {
+      fetch("http://localhost:8080/administrador/buscar?all=true", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Erro: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        document.getElementById("resposta").innerText = JSON.stringify(data, null, 2);
+      })
+      .catch(error => {
+        console.error("Erro na requisição:", error);
+        document.getElementById("resposta").innerText = `Erro na requisição: ${error}`;
+      });
+    }
+  </script>
+</body>
+</html>
