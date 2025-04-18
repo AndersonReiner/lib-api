@@ -14,7 +14,7 @@ public class AuthController {
     @Autowired
     public AuthService service;
 
-    @PutMapping("login")
+    @PostMapping("login")
     public ResponseEntity login(@RequestBody @Valid AuthDto dto){
 
         return service.login(dto);
@@ -22,3 +22,4 @@ public class AuthController {
     }
 
 }
+
