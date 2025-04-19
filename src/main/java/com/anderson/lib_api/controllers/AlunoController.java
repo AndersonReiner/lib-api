@@ -3,8 +3,10 @@ package com.anderson.lib_api.controllers;
 import com.anderson.lib_api.dto.AlunoDto;
 import com.anderson.lib_api.services.AlunoService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +21,7 @@ public class AlunoController extends BaseController<AlunoDto>{
 
     @Override
     @Operation(summary = "Cria um novo aluno", description = "Cadastra um novo aluno com base nos dados fornecidos.")
-    public ResponseEntity<?> criar(AlunoDto dto) {return service.criar(dto);}
+    public ResponseEntity<?> criar(@RequestBody @Valid AlunoDto dto) {return service.criar(dto);}
 
     @Override
     @Operation(summary = "Busca aluno", description = "Permite buscar aluno por ID, atributos específicos ou retornar todos.")
@@ -29,7 +31,7 @@ public class AlunoController extends BaseController<AlunoDto>{
 
     @Override
     @Operation(summary = "Atualiza um aluno", description = "Atualiza os dados de um aluno a partir do ID e do DTO fornecido.")
-    public ResponseEntity<?> atualizar(UUID id, AlunoDto dto) {
+    public ResponseEntity<?> atualizar(UUID id, @RequestBody @Valid AlunoDto dto) {
         return service.atualizar(id, dto);
     }
 

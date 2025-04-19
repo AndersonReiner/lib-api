@@ -5,6 +5,7 @@ import java.util.UUID;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +24,7 @@ public class AdministradorController extends BaseController<AdministradorDto> {
 
     @Override
     @Operation(summary = "Cria um novo administrador", description = "Cadastra um novo administrador com base nos dados fornecidos.")
-    public ResponseEntity criar(@Valid AdministradorDto dto) {
+    public ResponseEntity criar(@RequestBody @Valid AdministradorDto dto) {
 
         return service.criar(dto);
 
@@ -38,7 +39,7 @@ public class AdministradorController extends BaseController<AdministradorDto> {
 
     @Override
     @Operation(summary = "Atualiza um administrador", description = "Atualiza os dados de um administrador a partir do ID e do DTO fornecido.")
-    public ResponseEntity atualizar(UUID id, @Valid AdministradorDto dto) {
+    public ResponseEntity atualizar(UUID id, @RequestBody @Valid AdministradorDto dto) {
 
         return service.atualizar(id, dto);
     }
