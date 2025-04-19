@@ -14,7 +14,7 @@ import com.anderson.lib_api.services.AdministradorService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("administrador")
+@RequestMapping("api/administrador")
 public class AdministradorController extends BaseController<AdministradorDto> {
 
 
