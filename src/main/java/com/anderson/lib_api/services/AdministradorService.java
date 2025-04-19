@@ -18,7 +18,7 @@ import com.anderson.lib_api.repositories.AdministradorRepository;
 public class AdministradorService {
 
     @Autowired
-    public AdministradorRepository repository;
+    private AdministradorRepository repository;
     
 
     public ResponseEntity criar(AdministradorDto dto) {

@@ -17,11 +17,9 @@ import jakarta.validation.Valid;
 public abstract class BaseController<D> {
     
     @PostMapping("criar")
-    @Operation(summary = "Cria um novo administrador", description = "Cadastra um novo administrador com base nos dados fornecidos.")
     public abstract ResponseEntity criar(@RequestBody @Valid D dto);
     
     @GetMapping("buscar")
-    @Operation(summary = "Busca administradores", description = "Permite buscar administradores por ID, atributos específicos ou retornar todos.")
     public abstract ResponseEntity buscar(@RequestParam (value = "all", required = false, defaultValue = "false") Boolean all,
                                     @RequestParam(value = "id", required = false) UUID id,
                                     @RequestParam(value = "atributo_1", required = false) String atributo_01,
@@ -30,12 +28,9 @@ public abstract class BaseController<D> {
                                     @RequestParam(value = "valor_2", required = false) String valor_02);
 
     @PutMapping ("atualizar/{id}")
-    @Operation(summary = "Atualiza um administrador", description = "Atualiza os dados de um administrador a partir do ID e do DTO fornecido.")
     public abstract ResponseEntity atualizar(@PathVariable UUID id, @RequestBody @Valid D dto);
 
-
     @DeleteMapping("excluir/{id}")
-    @Operation(summary = "Exclui um administrador", description = "Remove um administrador com base no ID fornecido.")
     public abstract ResponseEntity excluir(@PathVariable UUID id);
 
 }
