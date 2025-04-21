@@ -46,22 +46,28 @@ public class EmprestimoService {
         Aluno aluno = alunoOpt.get();
         Livro livro = livroOpt.get();
 
-        Optional<Emprestimo> emprestimoExistente = repository.findByAlunoAndLivro(aluno, livro);
-        if (emprestimoExistente.isPresent()) {
-            return ResponseEntity
-                    .status(HttpStatus.CONFLICT)
-                    .body("Já existe um empréstimo ativo para este aluno e livro.");
+        if (livro.getQuantidade() <= 0) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Livro com ID " + dto.id_livro() + " sem quantidade em estoque.");
         }
+            Optional<Emprestimo> emprestimoExistente = repository.findByAlunoAndLivro(aluno, livro);
+            if (emprestimoExistente.isPresent()) {
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body("Já existe um empréstimo ativo para este aluno e livro.");
+            }
 
-        Emprestimo emprestimo = new Emprestimo(aluno, livro);
-        emprestimo.set_active(true);
-        emprestimo.setData_devolucao(null);
-        repository.save(emprestimo);
+            Emprestimo emprestimo = new Emprestimo(aluno, livro);
+            emprestimo.set_active(true);
+            emprestimo.setData_devolucao(null);
+            livro.setQuantidade(livro.getQuantidade() - 1);
+            livroRepository.save(livro);
+            repository.save(emprestimo);
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body("Empréstimo criado com sucesso!");
+            return ResponseEntity.status(HttpStatus.CREATED).body("Empréstimo criado com sucesso!");
     }
+
+
 
     public ResponseEntity devolver(UUID id){
 
@@ -69,8 +75,14 @@ public class EmprestimoService {
 
         if (optional.isPresent()) {
             Emprestimo emprestimo = optional.get();
+            if (emprestimo.is_active() == false){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ESSE DEVOLUÇÃO JÁ FOI REALIZADO");
+            }
             emprestimo.set_active(false);
             emprestimo.setData_devolucao(LocalDate.now());
+            Livro livro = emprestimo.getLivro();
+            livro.setQuantidade(livro.getQuantidade() + 1);
+            livroRepository.save(livro);
             repository.save(emprestimo);
             return ResponseEntity.ok("EMPRESTIMO DEVOLVIDO COM SUCESSO!");
         }
