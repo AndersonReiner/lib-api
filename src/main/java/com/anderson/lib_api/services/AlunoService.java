@@ -2,7 +2,9 @@ package com.anderson.lib_api.services;
 
 import com.anderson.lib_api.dto.AlunoDto;
 import com.anderson.lib_api.models.Aluno;
+import com.anderson.lib_api.models.Curso;
 import com.anderson.lib_api.repositories.AlunoRepository;
+import com.anderson.lib_api.repositories.CursoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,8 @@ public class AlunoService {
 
     @Autowired
     private AlunoRepository repository;
+    @Autowired
+    private CursoRepository cursoRepository;
 
     public ResponseEntity criar(AlunoDto dto) {
 
@@ -39,9 +43,17 @@ public class AlunoService {
         if (repository.findByTelefone(dto.telefone()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("TELEFONE: " + dto.telefone() + " JÁ CADASTRADO!");
         }
+
+        Optional<Curso> cursoOpt = cursoRepository.findById(dto.id_curso());
+        if (cursoOpt.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("Curso com ID " + dto.id_curso() + " não encontrado.");
+        }
         else
         {
-            repository.save(new Aluno(dto));
+            Curso curso = cursoOpt.get();
+            repository.save(new Aluno(dto, curso));
             return ResponseEntity.status(HttpStatus.CREATED).body("ALUNO CADASTRADO COM SUCESSO!!");
         }
 
@@ -96,7 +108,6 @@ public class AlunoService {
     }
 
 
-
     private Optional<Aluno> buscarPorAtributo(String atributo, String valor) {
         return switch (atributo.toLowerCase()) {
             case "nome" -> repository.findByNome(valor);
@@ -104,6 +115,7 @@ public class AlunoService {
             case "cpf" -> repository.findByCpf(valor);
             case "matricula" -> repository.findByMatricula(Integer.valueOf(valor));
             case "telefone" -> repository.findByTelefone(valor);
+            case "is_curso" -> repository.findByCurso_Id(UUID.fromString(valor));
             default -> Optional.empty();
         };
     }
@@ -116,6 +128,7 @@ public class AlunoService {
             case "cpf" -> aluno.getCpf().equalsIgnoreCase(valor);
             case "matricula" -> String.valueOf(aluno.getMatricula()).equals(valor);
             case "telefone" -> aluno.getTelefone().equalsIgnoreCase(valor);
+            case "id_curso" -> aluno.getCurso().equals(valor);
             default -> false;
         };
     }
@@ -147,6 +160,11 @@ public class AlunoService {
         }
         if (!alunoExistente.getTelefone().equals(dto.telefone()) && repository.findByTelefone(dto.telefone()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("TELEFONE: " + dto.telefone() + " JÁ CADASTRADO!");
+        }
+
+        Optional<Curso> cursoOpt = cursoRepository.findById(dto.id_curso());
+        if (cursoOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Curso com ID " + dto.id_curso() + " não encontrado.");
         }
 
         alunoExistente.setNome(dto.nome());

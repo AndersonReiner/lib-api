@@ -1,6 +1,7 @@
 package com.anderson.lib_api.repositories;
 
 import com.anderson.lib_api.models.Aluno;
+import com.anderson.lib_api.models.Curso;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -13,5 +14,5 @@ public interface AlunoRepository extends JpaRepository<Aluno, UUID> {
     Optional<Aluno> findByCpf(String cpf);
     Optional<Aluno> findByTelefone(String telefone);
     Optional<Aluno> findByMatricula(Integer matricula);
-
+    Optional<Aluno> findByCurso_Id(UUID cursoId);
 }
