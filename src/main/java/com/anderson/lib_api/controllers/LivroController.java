@@ -1,8 +1,10 @@
 package com.anderson.lib_api.controllers;
 
 import com.anderson.lib_api.dto.LivroDto;
+import com.anderson.lib_api.infra.security.SecurityConfig;
 import com.anderson.lib_api.services.LivroService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("api/livro/")
+@SecurityRequirement(name = SecurityConfig.SECURITY)
 public class LivroController extends BaseController<LivroDto>{
     
     @Autowired

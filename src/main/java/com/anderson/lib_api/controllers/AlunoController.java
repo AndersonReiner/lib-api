@@ -1,8 +1,10 @@
 package com.anderson.lib_api.controllers;
 
 import com.anderson.lib_api.dto.AlunoDto;
+import com.anderson.lib_api.infra.security.SecurityConfig;
 import com.anderson.lib_api.services.AlunoService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("api/aluno/")
+@SecurityRequirement(name = SecurityConfig.SECURITY)
 public class AlunoController extends BaseController<AlunoDto>{
 
     @Autowired

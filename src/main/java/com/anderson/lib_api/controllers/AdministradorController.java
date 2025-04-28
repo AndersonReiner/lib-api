@@ -2,7 +2,9 @@ package com.anderson.lib_api.controllers;
 
 import java.util.UUID;
 
+import com.anderson.lib_api.infra.security.SecurityConfig;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +18,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("api/administrador")
+@SecurityRequirement(name = SecurityConfig.SECURITY)
 public class AdministradorController extends BaseController<AdministradorDto> {
 
 

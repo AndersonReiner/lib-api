@@ -5,9 +5,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 
+import com.anderson.lib_api.dto.ResponseDTO;
+import com.anderson.lib_api.infra.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.anderson.lib_api.dto.AdministradorDto;
@@ -19,7 +22,10 @@ public class AdministradorService {
 
     @Autowired
     private AdministradorRepository repository;
-    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private TokenService tokenService;
 
     public ResponseEntity criar(AdministradorDto dto) {
         
@@ -42,8 +48,11 @@ public class AdministradorService {
 
         else
         {
-            repository.save(new Administrador(dto));
-            return ResponseEntity.status(HttpStatus.CREATED).body("USUÁRIO CADASTRADO COM SUCESSO!!");
+            Administrador adm = new Administrador(dto);
+            adm.setSenha(passwordEncoder.encode(dto.senha()));
+            repository.save(adm);
+            String token = this.tokenService.generateToken(adm);
+            return ResponseEntity.ok(new ResponseDTO(adm.getNome(), token));
         }
 
     }
@@ -150,7 +159,7 @@ public class AdministradorService {
         admExistente.setDataNasc(dto.dataNasc());
         admExistente.setCpf(dto.cpf());
         admExistente.setUsuario(dto.usuario());
-        admExistente.setSenha(dto.senha());
+        admExistente.setSenha(passwordEncoder.encode(dto.senha()));
     
         repository.save(admExistente);
         return ResponseEntity.ok("ADMINISTRADOR ATUALIZADO COM SUCESSO!");

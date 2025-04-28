@@ -1,7 +1,9 @@
 package com.anderson.lib_api.controllers;
 
 import com.anderson.lib_api.dto.EmprestimoDto;
+import com.anderson.lib_api.infra.security.SecurityConfig;
 import com.anderson.lib_api.services.EmprestimoService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("api/emprestimo")
+@SecurityRequirement(name = SecurityConfig.SECURITY)
 public class EmprestimoController extends BaseController<EmprestimoDto>{
 
     @Autowired
